@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Komentar</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f9f9f9; }
+    #komentarForm { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+    input, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 10px 20px; background: #007BFF; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    .komentar { background: #fff; border-radius: 5px; padding: 10px; margin-bottom: 10px; box-shadow: 0 0 3px rgba(0,0,0,0.1); }
+    .nama { font-weight: bold; margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <h2>Form Komentar</h2>
+  <form id="komentarForm">
+    <label for="nama">Nama:</label>
+    <input type="text" id="nama" required>
+
+    <label for="isiKomentar">Komentar:</label>
+    <textarea id="isiKomentar" rows="4" required></textarea>
+
+    <button type="submit">Kirim</button>
+  </form>
+
+  <h3>Daftar Komentar</h3>
+  <div id="daftarKomentar"></div>
+
+  <script>
+ function loadKomentar() {
+  fetch('simpan_komentar.php')
+    .then(response => response.json())
+    .then(data => {
+      const daftar = document.getElementById('daftarKomentar');
+      daftar.innerHTML = '';
+      data.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'komentar';
+        div.innerHTML = `
+          <div class="nama">${item.nama}</div>
+          <div>${item.komentar}</div>
+          <div style="font-size: 0.9em; color: #777;">${new Date(item.tanggal).toLocaleString('id-ID')}</div>
+        `;
+        daftar.appendChild(div);
+      });
+    });
+}
+
+    window.onload = loadKomentar;
+
+    document.getElementById('komentarForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value.trim();
+      const komentar = document.getElementById('isiKomentar').value.trim();
+
+      if (!nama || !komentar) return;
+
+      fetch('simpan_komentar.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `nama=${encodeURIComponent(nama)}&komentar=${encodeURIComponent(komentar)}`
+      })
+      .then(response => response.json())
+      .then(() => {
+        document.getElementById('komentarForm').reset();
+        loadKomentar();
+      });
+    });
+  </script>
+</body>
+</html>
