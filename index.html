@@ -4,17 +4,64 @@
   <meta charset="UTF-8">
   <title>Sistem Komentar</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #f9f9f9; }
-    #komentarForm { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
-    input, textarea { width: 100%; padding: 8px; margin-top: 5px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
-    button { padding: 10px 20px; background: #FFDBDB; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    button:hover { background: #EF88AD; }
-    .komentar { background: #fff; border-radius: 5px; padding: 10px; margin-bottom: 10px; box-shadow: 0 0 3px rgba(0,0,0,0.1); }
-    .nama { font-weight: bold; margin-bottom: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    #komentarForm {
+      margin-bottom: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #d95d9e;
+    }
+
+    .komentar {
+      background: #fff;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    .nama {
+      font-weight: bold;
+    }
+
+    .tanggal {
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
-  <h2>Forum Komentar</h2>
+  <h2>Form Komentar</h2>
   <form id="komentarForm">
     <label for="nama">Nama:</label>
     <input type="text" id="nama" required>
@@ -29,24 +76,24 @@
   <div id="daftarKomentar"></div>
 
   <script>
- function loadKomentar() {
-  fetch('simpan_komentar.php')
-    .then(response => response.json())
-    .then(data => {
-      const daftar = document.getElementById('daftarKomentar');
-      daftar.innerHTML = '';
-      data.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'komentar';
-        div.innerHTML = `
-          <div class="nama">${item.nama}</div>
-          <div>${item.komentar}</div>
-          <div style="font-size: 0.9em; color: #777;">${new Date(item.tanggal).toLocaleString('id-ID')}</div>
-        `;
-        daftar.appendChild(div);
-      });
-    });
-}
+    function loadKomentar() {
+      fetch('simpan_komentar.php')
+        .then(response => response.json())
+        .then(data => {
+          const daftar = document.getElementById('daftarKomentar');
+          daftar.innerHTML = '';
+          data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'komentar';
+            div.innerHTML = `
+              <div class="nama">${item.nama}</div>
+              <div>${item.komentar}</div>
+              <div class="tanggal">${new Date(item.tanggal).toLocaleString('id-ID')}</div>
+            `;
+            daftar.appendChild(div);
+          });
+        });
+    }
 
     window.onload = loadKomentar;
 
